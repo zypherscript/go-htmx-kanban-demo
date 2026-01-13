@@ -1,0 +1,46 @@
+{{if .Tasks}}
+    {{range .Tasks}}
+        <div class="task-card">
+            <div class="task-title">{{.Title}}</div>
+            {{if .Description}}
+                <div class="task-description">{{.Description}}</div>
+            {{end}}
+            <div class="task-actions">
+                {{if eq .Status "todo"}}
+                    <button class="btn-small" 
+                            hx-post="/move-task" 
+                            hx-vals='{"id": "{{.ID}}", "status": "doing"}'
+                            hx-target="#board"
+                            hx-swap="innerHTML">
+                        Move to Doing →
+                    </button>
+                {{else if eq .Status "doing"}}
+                    <button class="btn-small" 
+                            hx-post="/move-task" 
+                            hx-vals='{"id": "{{.ID}}", "status": "todo"}'
+                            hx-target="#board"
+                            hx-swap="innerHTML">
+                        ← Back to To Do
+                    </button>
+                    <button class="btn-small btn-success" 
+                            hx-post="/move-task" 
+                            hx-vals='{"id": "{{.ID}}", "status": "done"}'
+                            hx-target="#board"
+                            hx-swap="innerHTML">
+                        Move to Done ✓
+                    </button>
+                {{else if eq .Status "done"}}
+                    <button class="btn-small" 
+                            hx-post="/move-task" 
+                            hx-vals='{"id": "{{.ID}}", "status": "doing"}'
+                            hx-target="#board"
+                            hx-swap="innerHTML">
+                        ← Back to Doing
+                    </button>
+                {{end}}
+            </div>
+        </div>
+    {{end}}
+{{else}}
+    <div class="empty-state">No tasks {{if eq .Status "todo"}}yet{{else if eq .Status "doing"}}in progress{{else}}completed{{end}}</div>
+{{end}}
